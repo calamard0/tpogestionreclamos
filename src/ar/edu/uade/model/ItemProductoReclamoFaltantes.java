@@ -1,0 +1,43 @@
+package ar.edu.uade.model;
+
+public class ItemProductoReclamoFaltantes {
+
+	private Producto producto;
+	private int cantidadFaltante;
+	private int cantidadFacturada;
+	
+	
+	
+	public ItemProductoReclamoFaltantes() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+	public ItemProductoReclamoFaltantes(Producto producto,
+			int cantidadFaltante, int cantidadFacturada) {
+		super();
+		this.producto = producto;
+		this.cantidadFaltante = cantidadFaltante;
+		this.cantidadFacturada = cantidadFacturada;
+	}
+	public Producto getProducto() {
+		return producto;
+	}
+	public void setProducto(Producto producto) {
+		this.producto = producto;
+	}
+	public int getCantidadFaltante() {
+		return cantidadFaltante;
+	}
+	public void setCantidadFaltante(int cantidadFaltante) {
+		this.cantidadFaltante = cantidadFaltante;
+	}
+	public int getCantidadFacturada() {
+		return cantidadFacturada;
+	}
+	public void setCantidadFacturada(int cantidadFacturada) {
+		this.cantidadFacturada = cantidadFacturada;
+	}
+	
+	
+	
+}
