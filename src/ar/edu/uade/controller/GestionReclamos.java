@@ -30,21 +30,21 @@ public class GestionReclamos {
 
 
 	public Collection<ClienteDTO> getClientes() {
-		Collection<ClienteDTO> clientesView =  new ArrayList<>();
+		Collection<ClienteDTO> clientes =  new ArrayList<>();
 		for (Cliente cliente : Cliente.obtenerTodos()) {
 			ClienteDTO cV = new ClienteDTO(String.valueOf(cliente.getDni()), cliente.getNombre(), String.valueOf(cliente.getCantReclamos()), cliente.getMail());
-			clientesView.add(cV);
+			clientes.add(cV);
 		}
-		return clientesView;
+		return clientes;
 	}
 	
 	public List<UsuarioDTO> getUsuariosResponsables(String tipo) {
-		List<UsuarioDTO> usuariosView =  new ArrayList<>();
+		List<UsuarioDTO> usuarios =  new ArrayList<>();
 		for (Usuario usu : Usuario.obtenerResponsables(tipo)) {
 			UsuarioDTO cV = new UsuarioDTO(usu.getNombre(),usu.getApellido(),usu.getCodigo(),usu.getUsuario());
-			usuariosView.add(cV);
+			usuarios.add(cV);
 		}
-		return usuariosView;
+		return usuarios;
 	}
 
 
@@ -123,18 +123,18 @@ public class GestionReclamos {
 			tiposDeReclamos.add(TipoReclamo.FACTURACION.toString());
 		}
 
-		Collection<ReclamoDTO> reclamosView = new ArrayList<>();
+		Collection<ReclamoDTO> reclamosDto = new ArrayList<>();
 		List<Reclamo> reclamos = (List<Reclamo>) Reclamo.obtenerTodos(); 
 		for (Reclamo reclamo : reclamos ) {
 			if(reclamo.getTipoReclamo()!=null){
 				if(tiposDeReclamos.contains(reclamo.getTipoReclamo().toString())){
 					ReclamoDTO reclamoV = new ReclamoDTO(reclamo.getNumero(), reclamo.getDescripcion(),
 							reclamo.getTipoReclamo().getDescripcionTipo(), reclamo.isEstaSolucionado());
-					reclamosView.add(reclamoV);
+					reclamosDto.add(reclamoV);
 				}
 			}
 		}
-		return reclamosView;
+		return reclamosDto;
 	}
 	
 	public void iniciarReclamo(String desc, int codigo_cliente, int operador, int cod_responsable, boolean es_compuesto){
