@@ -11,6 +11,7 @@ import ar.edu.uade.controller.GestionReclamos;
 import ar.edu.uade.dto.ClienteDTO;
 import ar.edu.uade.dto.UsuarioDTO;
 import ar.edu.uade.enums.TipoReclamo;
+import ar.edu.uade.exception.UsuarioNoEncontradoException;
 import ar.edu.uade.model.Cliente;
 
 import java.awt.*;
@@ -100,12 +101,16 @@ public class VistaNuevoReclamoFactura extends JFrame {
                     	JOptionPane.showMessageDialog(null, "La Factura elegida no corresponde al Cliente seleccionado");
                     }
                     else{
-	                    GestionReclamos.getInstancia().crearReclamoFactura(Integer.parseInt(String.valueOf(comboBoxClientes.getSelectedItem())), textAreaDescripcion.getText(), mapFechaId
-	                    		,String.valueOf(comboBoxResp.getSelectedItem()));
-	                    JOptionPane.showMessageDialog(null, "Reclamo agregado correctamente");
-	                    //textFieldCodFactura.setText("");
-	                    textFieldFecha.setText("");
-	                    setVisible(false);
+                    	try {
+		                    GestionReclamos.getInstancia().crearReclamoFactura(Integer.parseInt(String.valueOf(comboBoxClientes.getSelectedItem())), textAreaDescripcion.getText(), mapFechaId
+		                    		,String.valueOf(comboBoxResp.getSelectedItem()));
+		                    JOptionPane.showMessageDialog(null, "Reclamo agregado correctamente");
+		                    //textFieldCodFactura.setText("");
+		                    textFieldFecha.setText("");
+		                    setVisible(false);
+	                    } catch (UsuarioNoEncontradoException e1) {
+							JOptionPane.showMessageDialog(null, e1.getMessage());
+						}
                     }
                 } catch (ParseException e1) {
                     e1.printStackTrace();

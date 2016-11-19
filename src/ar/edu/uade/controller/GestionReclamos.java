@@ -7,6 +7,8 @@ import ar.edu.uade.dto.*;
 import ar.edu.uade.enums.EnumEstado;
 import ar.edu.uade.enums.EnumRoles;
 import ar.edu.uade.enums.TipoReclamo;
+import ar.edu.uade.exception.UsuarioExistenteException;
+import ar.edu.uade.exception.UsuarioNoEncontradoException;
 import ar.edu.uade.model.*;
 
 public class GestionReclamos {
@@ -38,10 +40,21 @@ public class GestionReclamos {
 		return clientes;
 	}
 	
+	public Collection<EnumRoles> getRoles() {
+		Collection<EnumRoles> roles = new ArrayList<>();
+		roles.add(EnumRoles.ADMINISTRACION);
+		roles.add(EnumRoles.CALL_CENTER);
+		roles.add(EnumRoles.CONSULTA);
+		roles.add(EnumRoles.DISTRIBUCION);
+		roles.add(EnumRoles.FACTURACION);
+		roles.add(EnumRoles.ZONA_ENTREGA);
+		return roles;
+	}
+	
 	public List<UsuarioDTO> getUsuariosResponsables(String tipo) {
 		List<UsuarioDTO> usuarios =  new ArrayList<>();
 		for (Usuario usu : Usuario.obtenerResponsables(tipo)) {
-			UsuarioDTO cV = new UsuarioDTO(usu.getNombre(),usu.getApellido(),usu.getCodigo(),usu.getUsuario());
+			UsuarioDTO cV = new UsuarioDTO(usu.getNombre(),usu.getApellido(),usu.getCodigo(),usu.getUsuario(), usu.getRoles(), usu.getClave());
 			usuarios.add(cV);
 		}
 		return usuarios;
@@ -64,6 +77,12 @@ public class GestionReclamos {
 			facturas.add(codigo);
 		}
 		return facturas;
+	}
+	
+	public UsuarioDTO getUsuario(String usuario) throws UsuarioNoEncontradoException {
+		Usuario usu = Usuario.buscarPorUsuario(usuario);
+		UsuarioDTO dto = new UsuarioDTO(usu.getNombre(),usu.getApellido(),usu.getCodigo(),usu.getUsuario(), usu.getRoles(), usu.getClave());
+		return dto;
 	}
 
 
@@ -147,7 +166,7 @@ public class GestionReclamos {
 		}
 	}
 
-	public void crearReclamoProducto(int dni,HashMap<Integer, Integer> mapCodigoCantidad, String descripcion, String responsable) {
+	public void crearReclamoProducto(int dni,HashMap<Integer, Integer> mapCodigoCantidad, String descripcion, String responsable) throws UsuarioNoEncontradoException {
 		Cliente c = Cliente.buscarPorDni(dni);
 		Usuario resp = Usuario.buscarPorUsuario(responsable);
 		ReclamoProducto r = new ReclamoProducto();
@@ -186,7 +205,7 @@ public class GestionReclamos {
 		r.guardarCambios();
 	}
 
-	public void crearReclamoCantidades(int dni, Map<Integer, Integer> mapCodigoCantidad, String descripcion, String responsable) { 
+	public void crearReclamoCantidades(int dni, Map<Integer, Integer> mapCodigoCantidad, String descripcion, String responsable) throws UsuarioNoEncontradoException { 
 		Cliente cliente = Cliente.buscarPorDni(dni);
 		Usuario resp = Usuario.buscarPorUsuario(responsable);
 		ReclamoCantidad reclamoCantidad = ReclamosFactory.crearReclamoCantidad(cliente, descripcion,user,resp);
@@ -206,7 +225,7 @@ public class GestionReclamos {
 
 	}
 
-	public void crearReclamoZona(int dni, String zona, String descripcion, String responsable) {
+	public void crearReclamoZona(int dni, String zona, String descripcion, String responsable) throws UsuarioNoEncontradoException {
 		Cliente cliente = Cliente.buscarPorDni(dni);
 		Usuario resp = Usuario.buscarPorUsuario(responsable);		
 		ReclamoZona reclamoPorZona = ReclamosFactory.crearReclamoZona(cliente, descripcion, 
@@ -224,7 +243,7 @@ public class GestionReclamos {
 		
 	}
 
-	public void crearReclamoFactura(int dni, String descripcion, Map<Integer, Date> mapIdFecha, String responsable) {
+	public void crearReclamoFactura(int dni, String descripcion, Map<Integer, Date> mapIdFecha, String responsable) throws UsuarioNoEncontradoException {
 		Cliente cliente = Cliente.buscarPorDni(dni);
 		Usuario resp = Usuario.buscarPorUsuario(responsable);
 		ReclamoFacturacion reclamoFacturacion = ReclamosFactory.crearReclamoFacturacion(cliente, descripcion, 
@@ -244,7 +263,7 @@ public class GestionReclamos {
 		
 	}
 
-	public void crearReclamoFaltantes(int dni, int cod_producto, int cant_socilitada, int cant_recibidad, String descripcion, String responsable) {
+	public void crearReclamoFaltantes(int dni, int cod_producto, int cant_socilitada, int cant_recibidad, String descripcion, String responsable) throws UsuarioNoEncontradoException {
 		Cliente cliente = Cliente.buscarPorDni(dni);
 		Usuario resp = Usuario.buscarPorUsuario(responsable);
 		//Usuario operador = Usuario.buscarPorId(cod_operador);
@@ -274,7 +293,7 @@ public class GestionReclamos {
 		reclamoFaltantes.guardarCambios();
 	}
 
-	public void crearReclamoCompuesto(int dni, List<Integer> ids_reclamos, String responsable) {
+	public void crearReclamoCompuesto(int dni, List<Integer> ids_reclamos, String responsable) throws UsuarioNoEncontradoException {
 		Cliente cliente = Cliente.buscarPorDni(dni);
 		Usuario operador = user;
 		Usuario resp = Usuario.buscarPorUsuario(responsable);
@@ -393,6 +412,21 @@ public class GestionReclamos {
 
 	public Reclamo getUltimoReclamo() {
 		return Reclamo.getUltimoReclamo();
+	}
+	
+	public void altaUsuario(UsuarioDTO dto) throws UsuarioExistenteException {
+		Usuario usu = new Usuario(dto);
+		usu.insert();
+	}
+	
+	public void modificarUsuario(UsuarioDTO dto) {
+		Usuario usu = new Usuario(dto);
+		usu.update();
+	}
+	
+	public void eliminarUsuario(UsuarioDTO dto) {
+		Usuario usu = new Usuario(dto);
+		usu.delete();
 	}
 	
 }

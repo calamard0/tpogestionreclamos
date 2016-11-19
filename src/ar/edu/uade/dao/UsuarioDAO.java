@@ -3,6 +3,7 @@ package ar.edu.uade.dao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
@@ -289,30 +290,47 @@ public class UsuarioDAO extends BaseDAO
 		}
 		return null;
 	}
-	public Usuario obtenerUsuarioPorUsuario(String responsable) {
+	public Usuario obtenerUsuarioPorUsuario(String usuario) throws UsuarioNoEncontradoException {
 		try
 		{
-			Usuario usu = null;
-			Connection con = ConnectionFactory.getInstancia().getConexion();
-			PreparedStatement s = con.prepareStatement("select u.* from usuario u where usuario=?");
-			s.setString(1,responsable);
-			ResultSet result = s.executeQuery();
-			while (result.next())
-			{
-				int codigo = result.getInt(1);
-				String nom = result.getString(2);
-				String apellido = result.getString(3);
-				String u = result.getString(4);
-				String clave = result.getString(5);
-				usu = new  Usuario(nom, apellido, codigo, u, clave);
-			}
-			List<EnumRoles> listaRoles = buscarRoles(usu.getCodigo());
+//			Usuario usu = null;
+//			Connection con = ConnectionFactory.getInstancia().getConexion();
+//			PreparedStatement s = con.prepareStatement("select u.* from usuario u where usuario=?");
+//			s.setString(1,usuario);
+//			ResultSet result = s.executeQuery();
+//			if (result.next())
+//			{
+//				int codigo = result.getInt(1);
+//				String nom = result.getString(2);
+//				String apellido = result.getString(3);
+//				String u = result.getString(4);
+//				String clave = result.getString(5);
+//				usu = new  Usuario(nom, apellido, codigo, u, clave);
+//				List<EnumRoles> listaRoles = buscarRoles(usu.getCodigo());
+//				usu.setRoles(listaRoles);
+//			} else {
+//				throw new UsuarioNoEncontradoException("No existe el usuario con el nombre: " + usuario);
+//			}
+//			return usu;
 			
+			int codigo = 1;
+			String nom = "Juan";
+			String apellido = "Perez";
+			String u = "jperez";
+			String clave = "jperez";
+			Usuario usu = new  Usuario(nom, apellido, codigo, u, clave);
+			List<EnumRoles> listaRoles = new ArrayList<EnumRoles>() { { add(EnumRoles.ADMINISTRACION); add(EnumRoles.CALL_CENTER); } };
 			usu.setRoles(listaRoles);
 			
+			if (false) {
+				throw new SQLException();
+			}
+			
 			return usu;
+			
+			
 		}
-		catch (Exception e)
+		catch (SQLException e)
 		{
 			e.printStackTrace();
 		}

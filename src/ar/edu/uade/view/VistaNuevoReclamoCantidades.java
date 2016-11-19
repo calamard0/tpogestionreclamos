@@ -11,6 +11,7 @@ import ar.edu.uade.controller.GestionReclamos;
 import ar.edu.uade.dto.ClienteDTO;
 import ar.edu.uade.dto.UsuarioDTO;
 import ar.edu.uade.enums.TipoReclamo;
+import ar.edu.uade.exception.UsuarioNoEncontradoException;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -165,10 +166,14 @@ public class VistaNuevoReclamoCantidades extends JFrame {
                     String codigo = parts[0];
                     mapCodigoCantidad.put(Integer.valueOf(codigo), Integer.valueOf(data.elementAt(i).elementAt(1)));
                 }
-                GestionReclamos.getInstancia().crearReclamoCantidades(Integer.parseInt(String.valueOf(comboBoxClientes.getSelectedItem())), mapCodigoCantidad, textAreaDescripcion.getText(),String.valueOf(comboBoxResp.getSelectedItem()));
-                JOptionPane.showMessageDialog(null, "Reclamo agregado correctamente");
-                data.clear();
-                setVisible(false);
+                try {
+					GestionReclamos.getInstancia().crearReclamoCantidades(Integer.parseInt(String.valueOf(comboBoxClientes.getSelectedItem())), mapCodigoCantidad, textAreaDescripcion.getText(),String.valueOf(comboBoxResp.getSelectedItem()));
+					data.clear();
+	                setVisible(false);
+	                JOptionPane.showMessageDialog(null, "Reclamo agregado correctamente");
+				} catch (UsuarioNoEncontradoException e1) {
+					JOptionPane.showMessageDialog(null, e1.getMessage());
+				}
             }
         });
         getContentPane().add(btnAceptar);

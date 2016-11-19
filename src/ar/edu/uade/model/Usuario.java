@@ -4,7 +4,10 @@ import java.util.Collection;
 import java.util.List;
 
 import ar.edu.uade.dao.UsuarioDAO;
+import ar.edu.uade.dto.UsuarioDTO;
 import ar.edu.uade.enums.EnumRoles;
+import ar.edu.uade.exception.UsuarioExistenteException;
+import ar.edu.uade.exception.UsuarioNoEncontradoException;
 
 public class Usuario {
 	
@@ -20,14 +23,16 @@ public class Usuario {
 		this.apellido = apellido;
 		this.codigo = codigo;
 		this.usuario = usuario;
-		this.clave = clave;
+		this.setClave(clave);
 	}
 	
-
-	public Usuario() {
-		// TODO Auto-generated constructor stub
+	public Usuario(UsuarioDTO dto) {
+		this.nombre = dto.getNombre();
+		this.apellido = dto.getApellido();
+		this.usuario = dto.getUsuario();
+		this.setClave(dto.getClave());
+		this.roles = dto.getRoles();
 	}
-
 
 	public int getCodigo() {
 		return codigo;
@@ -64,7 +69,6 @@ public class Usuario {
 		
 	}
 
-
 	public static List<Usuario> obtenerResponsables(String tipo) {
 		return UsuarioDAO.getInstancia().obtenerResponsables(tipo);
 	}
@@ -80,11 +84,36 @@ public class Usuario {
 	}
 
 
-	public static Usuario buscarPorUsuario(String responsable) {
+	public static Usuario buscarPorUsuario(String responsable) throws UsuarioNoEncontradoException {
 		return UsuarioDAO.getInstancia().obtenerUsuarioPorUsuario(responsable);
 	}
 
+	public void insert() throws UsuarioExistenteException {
+		this.validarUsuario(this.getUsuario());
+		UsuarioDAO.getInstancia().insert(this);
+	}
+	
+	public void update() {
+		UsuarioDAO.getInstancia().update(this);
+	}
+	
+	public void delete() {
+		UsuarioDAO.getInstancia().delete(this);
+	}
 
+	private void validarUsuario(String usuario) throws UsuarioExistenteException {
+		try {
+			this.buscarPorUsuario(usuario);
+			throw new UsuarioExistenteException();
+		} catch (UsuarioNoEncontradoException e) {
+		}
+	}
 
+	public String getClave() {
+		return clave;
+	}
 
+	public void setClave(String clave) {
+		this.clave = clave;
+	}
 }

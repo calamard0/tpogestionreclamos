@@ -12,6 +12,7 @@ import ar.edu.uade.dto.ClienteDTO;
 import ar.edu.uade.dto.ReclamoDTO;
 import ar.edu.uade.dto.UsuarioDTO;
 import ar.edu.uade.enums.TipoReclamo;
+import ar.edu.uade.exception.UsuarioNoEncontradoException;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -156,12 +157,16 @@ public class VistaNuevoReclamoCompuesto extends JFrame {
 				
 				
 				if(idsReclamos.size()>=1){
-					GestionReclamos.getInstancia().crearReclamoCompuesto(Integer.parseInt((String) comboBoxClientes.getSelectedItem()), idsReclamos,
-							String.valueOf(comboBoxResp.getSelectedItem()));
-					JOptionPane.showMessageDialog(null, "Reclamo agregado correctamente");
-					dataReclamos.clear();
-					data.clear();
-					setVisible(false);
+					try {
+						GestionReclamos.getInstancia().crearReclamoCompuesto(Integer.parseInt((String) comboBoxClientes.getSelectedItem()), idsReclamos,
+								String.valueOf(comboBoxResp.getSelectedItem()));
+						JOptionPane.showMessageDialog(null, "Reclamo agregado correctamente");
+						dataReclamos.clear();
+						data.clear();
+						setVisible(false);
+					} catch (UsuarioNoEncontradoException e1) {
+						JOptionPane.showMessageDialog(null, e1.getMessage());
+					}
 				}else{
 					JOptionPane.showMessageDialog(null, "Error: Debe agregar por lo menos 1 reclamo");
 				}
