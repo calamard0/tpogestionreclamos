@@ -40,26 +40,89 @@ public class UsuarioDAO extends BaseDAO
 
 	@Override
 	public void delete(Object d) {
-		// TODO Auto-generated method stub
 
+		Connection con;
+		try {
+			Usuario u = (Usuario) d;
+			con = ConnectionFactory.getInstancia().getConexion();
+			PreparedStatement s = con.prepareStatement("DELETE FROM Usuario WHERE usuario = ? AND clave = ?");
+			s.setString(1, u.getUsuario());
+			s.execute();
+		} catch (Exception e) {
+			System.out.println();
+		} finally {
+			ConnectionFactory.getInstancia().closeCon();
+		}
 	}
 
 	@Override
 	public void insert(Object o) {
-		// TODO Auto-generated method stub
+		Connection con;
+
+		try {
+			Usuario u = (Usuario) o;
+			con = ConnectionFactory.getInstancia().getConexion();
+			PreparedStatement s = con
+					.prepareStatement("INSERT INTO Usuario (nombre, apellido, usuario, clave) VALUES (?, ?, ?, ?)");
+			s.setString(1, u.getNombre());
+			s.setString(2, u.getApellido());
+			s.setString(3, u.getUsuario());
+			s.setString(4, u.getClave());
+
+			s.execute();
+		} catch (Exception e) {
+			System.out.println();
+		} finally {
+			ConnectionFactory.getInstancia().closeCon();
+		}
 
 	}
 
 	@Override
 	public Vector<Object> select(Object o) {
-		// TODO Auto-generated method stub
-		return null;
+		Vector usuariosVector = new Vector();
+		Connection con;
+		try {
+			con = ConnectionFactory.getInstancia().getConexion();
+			PreparedStatement s = con.prepareStatement("SELECT * FROM Usuario");
+			ResultSet result = s.executeQuery();
+			while (result.next()) {
+				int codigo  = result.getInt(1);
+				String usuario  = result.getString(2);
+				String nombre = result.getString(3);
+				String apellido = result.getString(4);
+				String clave = result.getString(5);
+				
+				Usuario u = new Usuario(nombre, apellido,codigo, usuario, clave);
+				usuariosVector.add(u);
+			}
+		} catch (Exception e) {
+			System.out.println();
+		}finally {
+			ConnectionFactory.getInstancia().closeCon();
+		}
+		
+		return usuariosVector;
 	}
 
 	@Override
 	public void update(Object o) {
-		// TODO Auto-generated method stub
-
+		Connection con;
+		try {
+			con = ConnectionFactory.getInstancia().getConexion();
+			Usuario u = (Usuario) o;
+			PreparedStatement s = con.prepareStatement("UPDATE Usuario " +
+					"set clave = ? WHERE usuario = ?");
+			
+			s.setString(1, u.getClave());
+			s.setString(2, u.getUsuario());
+			s.execute();
+		} catch (Exception e) {
+			System.out.println();
+		}finally {
+			ConnectionFactory.getInstancia().closeCon();
+		}
+		
 	}
 	
 	public Vector<Usuario> selectAll()

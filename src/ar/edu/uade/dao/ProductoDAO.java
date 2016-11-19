@@ -28,20 +28,64 @@ public class ProductoDAO extends BaseDAO
 
 	@Override
 	public void delete(Object d) {
-		// TODO Auto-generated method stub
+		Connection con;
 
+		try {
+			Producto p = (Producto) d;
+			con =ConnectionFactory.getInstancia().getConexion();
+			PreparedStatement s = con.prepareStatement("DELETE FROM Producto WHERE codigo = ?");
+			s.setInt(1, p.getCodigo());
+			s.execute();
+		} catch (Exception e) {
+			System.out.println();
+		}finally {
+			ConnectionFactory.getInstancia().closeCon();
+		}
 	}
 
 	@Override
 	public void insert(Object o) {
-		// TODO Auto-generated method stub
-
+		Connection con;
+		try {
+			Producto p = (Producto) o;
+		    con = ConnectionFactory.getInstancia().getConexion();
+			PreparedStatement s = con.prepareStatement("INSERT INTO Producto (codigo, titulo, descripcion, precio) VALUES (?, ?, ?, ?)");
+			s.setInt(1, p.getCodigo());
+			s.setString(2, p.getTitulo());
+			s.setString(3, p.getDescripcion());
+			s.setFloat(4, p.getPrecio());
+			s.execute();
+		} catch (Exception e) {
+			System.out.println();
+		}finally {
+			ConnectionFactory.getInstancia().closeCon();
+		}
+		
 	}
 
 	@Override
 	public Vector<Object> select(Object o) {
-		// TODO Auto-generated method stub
-		return null;
+		Vector productosVector = new Vector();
+		Connection con;
+		try {
+			con = ConnectionFactory.getInstancia().getConexion();
+			PreparedStatement s = con.prepareStatement("SELECT * FROM Producto");
+			ResultSet result = s.executeQuery();
+			while (result.next()) {
+				int codigo = result.getInt(1);
+				String titulo = result.getString(2);
+				String descripcion = result.getString(3);
+				float precio = result.getFloat(4);
+				
+				Producto p = new Producto(codigo, titulo, descripcion, precio);
+				productosVector.add(p);
+			}
+		} catch (Exception e) {
+			System.out.println();
+		}finally {
+			ConnectionFactory.getInstancia().closeCon();
+		}
+		return productosVector;
 	}
 
 	@Override
@@ -76,7 +120,7 @@ public class ProductoDAO extends BaseDAO
 		}
 		return null;
 	}
-	
+		
 	public Producto buscarProducto(int numero)
 	{
 		try
