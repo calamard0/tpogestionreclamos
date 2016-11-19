@@ -22,6 +22,10 @@ public class UsuarioDTO {
 		this.roles = roles;
 		this.clave = clave;
 	}
+	
+	public UsuarioDTO(String usuario) {
+		this.usuario = usuario;
+	}
 
 	public UsuarioDTO() {
 		// TODO Auto-generated constructor stub

@@ -1,17 +1,36 @@
 package ar.edu.uade.dto;
 
+import java.util.Collection;
+
+import ar.edu.uade.model.Reclamo;
+import ar.edu.uade.model.Usuario;
+
 public class ClienteDTO {
 
     private String dni;
     private String nombre;
     private String cantidad_reclamos;
     private String mail;
+    private String domicilio;
+    private String telefono;
 
     public ClienteDTO(String dni, String nombre, String cantidad_reclamos, String mail) {
         this.dni = dni;
         this.nombre = nombre;
         this.cantidad_reclamos = cantidad_reclamos;
         this.mail = mail;
+    }
+    
+    public ClienteDTO(String dni) {
+    	this.dni = dni;
+    }
+    
+    public ClienteDTO(String dni, String nombre, String mail, String domicilio, String telefono) {
+        this.dni = dni;
+        this.nombre = nombre;
+        this.mail = mail;
+        this.setDomicilio(domicilio);
+        this.setTelefono(telefono);
     }
 
      public String getDni() {
@@ -53,6 +72,22 @@ public class ClienteDTO {
 		return "ClienteView [dni=" + dni + ", nombre=" + nombre
 				+ ", cantidad_reclamos=" + cantidad_reclamos + ", mail=" + mail
 				+ "]";
+	}
+
+	public String getDomicilio() {
+		return domicilio;
+	}
+
+	public void setDomicilio(String domicilio) {
+		this.domicilio = domicilio;
+	}
+
+	public String getTelefono() {
+		return telefono;
+	}
+
+	public void setTelefono(String telefono) {
+		this.telefono = telefono;
 	}
 
 }

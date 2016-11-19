@@ -14,25 +14,16 @@ import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
 import ar.edu.uade.controller.GestionReclamos;
+import ar.edu.uade.dto.UsuarioDTO;
 import ar.edu.uade.exception.CampoObligatorioException;
 import ar.edu.uade.exception.UsuarioNoEncontradoException;
 
 public class VistaAdministradorUsuario extends javax.swing.JFrame {
-
 	
 	private JTextField fieldUsuario;
 	private JButton btnAgregar;
 	private JButton btnModificar;
 	private JButton btnEliminar;
-	
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				VistaAdministradorUsuario window = new VistaAdministradorUsuario();
-				window.setVisible(true);
-			}
-		});
-	}
 	
 	public VistaAdministradorUsuario() {
 		initialize();
@@ -43,7 +34,6 @@ public class VistaAdministradorUsuario extends javax.swing.JFrame {
 		this.getContentPane().setFont(new Font("Tahoma", Font.PLAIN, 14));
 		this.setTitle("Administrador Usuarios");
 		this.setBounds(100, 100, 265, 160);
-		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.getContentPane().setLayout(null);
 		
 		JLabel usuarioLbl = new JLabel("Usuario:");
@@ -81,7 +71,18 @@ public class VistaAdministradorUsuario extends javax.swing.JFrame {
 		this.getContentPane().add(btnEliminar);
 		btnEliminar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent evt) {
-				// eliminar usuario
+				try {
+					if ( fieldUsuario.getText().equals(""))
+						throw new CampoObligatorioException();
+					
+					UsuarioDTO dto = new UsuarioDTO(fieldUsuario.getText());
+					GestionReclamos.getInstancia().eliminarUsuario(dto);
+					JOptionPane.showMessageDialog(null, "Se ha eliminado correctamente el usuario.");
+					fieldUsuario.setText("");
+					
+				} catch (UsuarioNoEncontradoException | CampoObligatorioException e) {
+					JOptionPane.showMessageDialog(null, e.getMessage());
+				}
 			}
 		});
 		

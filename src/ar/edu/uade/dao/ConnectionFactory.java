@@ -40,4 +40,9 @@ public class ConnectionFactory
 		}
         return con;
     }
+    
+    public void closeCon()
+    {  
+        
+    }
 }

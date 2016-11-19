@@ -28,27 +28,92 @@ public class ClienteDAO extends BaseDAO
 	}
 
 	@Override
-	public void delete(Object d) {
-		// TODO Auto-generated method stub
+	public void delete(Object o) {
+		Connection con;
+		try {
+			Cliente c = (Cliente) o;
+			con = ConnectionFactory.getInstancia().getConexion();
+			PreparedStatement s = con.prepareStatement("DELETE FROM Cliente WHERE dni = ?");
+			s.setInt(1, c.getDni());
+			s.execute();
+		} catch (Exception e) {
+			System.out.println();
+		}finally {
+			ConnectionFactory.getInstancia().closeCon();
+		}
 
 	}
 
 	@Override
 	public void insert(Object o) {
-		// TODO Auto-generated method stub
+		Connection con = null;
+		try {
+			con = ConnectionFactory.getInstancia().getConexion();
+			Cliente c = (Cliente) o;
+			PreparedStatement s = con.prepareStatement(
+					"INSERT INTO Cliente (nombre, dni, domicilio, email, telefono) VALUES (?, ?, ?, ?, ?)");
+			s.setString(1, c.getNombre());
+			s.setInt(2, c.getDni());
+			s.setString(3, c.getDomicilio());
+			s.setString(4, c.getMail());
+			s.setString(5, c.getTelefono());
+			s.execute();
+		} catch (Exception e) {
+			System.out.println();
+		} finally {
+			ConnectionFactory.getInstancia().closeCon();
+		}
 
 	}
 
 	@Override
 	public Vector<Object> select(Object o) {
-		// TODO Auto-generated method stub
-		return null;
+
+		Vector clientesVector = new Vector();
+		Connection con;
+		try {
+			con = ConnectionFactory.getInstancia().getConexion();
+			PreparedStatement s = con.prepareStatement("SELECT * FROM Cliente");
+			ResultSet result = s.executeQuery();
+			while (result.next()) {
+				int cod = result.getInt(1);
+				int dni = result.getInt(2);
+				String nombre = result.getString(3);
+				String domicilio = result.getString(4);
+				String telefono = result.getString(5);
+				String email = result.getString(6);
+				Cliente c = new Cliente(cod, nombre, dni, domicilio, telefono, email);
+				clientesVector.add(c);
+			}
+		} catch (Exception e) {
+			System.out.println();
+		} finally {
+			ConnectionFactory.getInstancia().closeCon();
+		}
+		return clientesVector;
 	}
 
 	@Override
 	public void update(Object o) {
-		// TODO Auto-generated method stub
+		Connection con = null;
+		try {
+			Cliente c = (Cliente) o;
+			con = ConnectionFactory.getInstancia().getConexion();
+			PreparedStatement s = con.prepareStatement("UPDATE Cliente " + "set nombre = ?," + "set domicilio = ?,"
+					+ "set telefono = ?," + "set email = ? WHERE dni = ?");
 
+			s.setString(1, c.getNombre());
+			s.setString(2, c.getDomicilio());
+			s.setString(3, c.getTelefono());
+			s.setString(4, c.getMail());
+			s.setLong(5, c.getDni());
+			s.execute();
+
+		} catch (Exception e) {
+			System.out.println();
+		} finally {
+			ConnectionFactory.getInstancia().closeCon();
+		}
 	}
 	public Vector<Cliente> selectAll()
 	{

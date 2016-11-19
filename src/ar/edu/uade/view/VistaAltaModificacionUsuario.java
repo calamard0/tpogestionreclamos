@@ -1,16 +1,9 @@
 package ar.edu.uade.view;
 
-import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.Vector;
 
 import javax.swing.JButton;
@@ -21,7 +14,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
@@ -31,16 +23,15 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 
 import ar.edu.uade.controller.GestionReclamos;
-import ar.edu.uade.dto.ClienteDTO;
 import ar.edu.uade.dto.UsuarioDTO;
 import ar.edu.uade.enums.EnumRoles;
-import ar.edu.uade.enums.TipoReclamo;
 import ar.edu.uade.exception.CampoObligatorioException;
 import ar.edu.uade.exception.UsuarioExistenteException;
 import ar.edu.uade.exception.UsuarioNoEncontradoException;
 
 public class VistaAltaModificacionUsuario extends JFrame {
 	
+	private static final long serialVersionUID = 5812760100472581803L;
 	private JTextField fieldUsuario;
 	private JLabel lblContrasenia;
 	private JPasswordField passFieldContrasenia;
@@ -55,15 +46,6 @@ public class VistaAltaModificacionUsuario extends JFrame {
 	
 	private Vector<String> dataRoles = new Vector<>();
 	private Vector<Vector<String>> data =  new Vector<>();
-
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				VistaAltaModificacionUsuario window = new VistaAltaModificacionUsuario();
-				window.setVisible(true);
-			}
-		});
-	}
 	
 	public VistaAltaModificacionUsuario() {
 		initGUI();
@@ -202,7 +184,7 @@ public class VistaAltaModificacionUsuario extends JFrame {
 					
 					UsuarioDTO dto = new UsuarioDTO(fieldNombre.getText(), fieldApellido.getText(), -1, fieldUsuario.getText(), roles, passFieldContrasenia.getText());
 					GestionReclamos.getInstancia().altaUsuario(dto);
-					
+					JOptionPane.showMessageDialog(null, "Se ha agregado correctamente el usuario.");
 				} catch (CampoObligatorioException | UsuarioExistenteException e) {
 					JOptionPane.showMessageDialog(null, e.getMessage());
 				}
@@ -220,6 +202,7 @@ public class VistaAltaModificacionUsuario extends JFrame {
 					
 					UsuarioDTO dto = new UsuarioDTO(fieldNombre.getText(), fieldApellido.getText(), -1, fieldUsuario.getText(), roles, passFieldContrasenia.getText());
 					GestionReclamos.getInstancia().modificarUsuario(dto);
+					JOptionPane.showMessageDialog(null, "Se han modificado correctamente los datos del usuario.");
 					
 				} catch (CampoObligatorioException e) {
 					JOptionPane.showMessageDialog(null, e.getMessage());
@@ -238,6 +221,7 @@ public class VistaAltaModificacionUsuario extends JFrame {
 			Vector<String> nombresColumnas = new Vector<>();
 	        nombresColumnas.add("Rol");
 	        
+	        this.setTitle("Modificacion Usuario");
 			fieldUsuario.setText(dto.getUsuario());
 			fieldUsuario.setEnabled(false);
 			passFieldContrasenia.setText(dto.getClave());

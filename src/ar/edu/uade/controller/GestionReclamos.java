@@ -2,11 +2,14 @@ package ar.edu.uade.controller;
 
 import java.util.*;
 
+import ar.edu.uade.dao.ClienteDAO;
 import ar.edu.uade.dao.ProductoDAO;
 import ar.edu.uade.dto.*;
 import ar.edu.uade.enums.EnumEstado;
 import ar.edu.uade.enums.EnumRoles;
 import ar.edu.uade.enums.TipoReclamo;
+import ar.edu.uade.exception.ClienteExistenteException;
+import ar.edu.uade.exception.ClienteNoEncontradoException;
 import ar.edu.uade.exception.UsuarioExistenteException;
 import ar.edu.uade.exception.UsuarioNoEncontradoException;
 import ar.edu.uade.model.*;
@@ -424,9 +427,42 @@ public class GestionReclamos {
 		usu.update();
 	}
 	
-	public void eliminarUsuario(UsuarioDTO dto) {
+	public void eliminarUsuario(UsuarioDTO dto) throws UsuarioNoEncontradoException {
 		Usuario usu = new Usuario(dto);
 		usu.delete();
 	}
 	
+	public void altaCliente(ClienteDTO dto) throws ClienteExistenteException  {
+		Cliente cl = new Cliente(dto);
+		cl.insert();
+	}
+	
+	public void modificarCliente(ClienteDTO dto) {
+		Cliente cl = new Cliente(dto);
+		cl.update();
+	}
+	
+	public void eliminarCliente(ClienteDTO dto) throws ClienteNoEncontradoException {
+		Cliente cl = new Cliente(dto);
+		cl.delete();
+	}
+	
+	/**
+	 * Verifica la existencia del Cliente, en caso contrario lanzara una excepción.
+	 * @throws ClienteNoEncontradoException 
+	 * 
+	 */
+	public void verificarCliente(int dni) throws ClienteNoEncontradoException {
+		Cliente cl = Cliente.buscarPorDni(dni);
+		if (cl == null)
+			throw new ClienteNoEncontradoException("No existe el cliente con el dni: " + dni);
+	}
+	
+	public ClienteDTO getCliente(int dni) throws ClienteNoEncontradoException {
+		Cliente cl = Cliente.buscarPorDni(dni);
+		if (cl == null)
+			throw new ClienteNoEncontradoException("No existe el cliente con el dni: " + dni);
+		ClienteDTO dto = new ClienteDTO(String.valueOf(cl.getDni()), cl.getNombre(), cl.getMail(), cl.getDomicilio(), cl.getTelefono());
+		return dto;
+	}
 }

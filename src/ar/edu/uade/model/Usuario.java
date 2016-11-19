@@ -83,13 +83,18 @@ public class Usuario {
 		this.usuario = usuario;
 	}
 
-
-	public static Usuario buscarPorUsuario(String responsable) throws UsuarioNoEncontradoException {
-		return UsuarioDAO.getInstancia().obtenerUsuarioPorUsuario(responsable);
+	public static Usuario buscarPorUsuario(String usuario) throws UsuarioNoEncontradoException {
+		Usuario us = UsuarioDAO.getInstancia().obtenerUsuarioPorUsuario(usuario);
+		if (us == null)
+			throw new UsuarioNoEncontradoException("No existe el usuario con el nombre: " + usuario);
+		return us;
 	}
 
 	public void insert() throws UsuarioExistenteException {
-		this.validarUsuario(this.getUsuario());
+		Usuario us = UsuarioDAO.getInstancia().obtenerUsuarioPorUsuario(this.getUsuario());
+		if (us != null)
+			throw new UsuarioExistenteException();
+		
 		UsuarioDAO.getInstancia().insert(this);
 	}
 	
@@ -97,16 +102,12 @@ public class Usuario {
 		UsuarioDAO.getInstancia().update(this);
 	}
 	
-	public void delete() {
-		UsuarioDAO.getInstancia().delete(this);
-	}
-
-	private void validarUsuario(String usuario) throws UsuarioExistenteException {
-		try {
-			this.buscarPorUsuario(usuario);
-			throw new UsuarioExistenteException();
-		} catch (UsuarioNoEncontradoException e) {
-		}
+	public void delete() throws UsuarioNoEncontradoException {
+		Usuario us = UsuarioDAO.getInstancia().obtenerUsuarioPorUsuario(this.getUsuario());
+		if (us != null)
+			UsuarioDAO.getInstancia().delete(this);
+		else
+			throw new UsuarioNoEncontradoException("No existe el usuario con el nombre: " + this.getUsuario());
 	}
 
 	public String getClave() {
