@@ -17,6 +17,7 @@ public class VistaMenu extends JFrame {
     private JMenuItem jMenuItem3;
     private JMenu jMenu1;
     private JMenu jMenu4;
+    private JMenu jMenu5;
     private JMenuItem jMenuItem1;
     private JMenu jMenu3;
     private JMenu jMenu2;
@@ -37,7 +38,7 @@ public class VistaMenu extends JFrame {
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(null);
         this.setBounds(100, 100, 500, 500);
-        this.setTitle("Sistema de Administracion de Reclamos");
+        this.setTitle("Sistema de Gestion de Reclamos");
         jMenuBar1 = new JMenuBar();
         setJMenuBar(jMenuBar1);
         jMenu2 = new JMenu();
@@ -169,6 +170,22 @@ public class VistaMenu extends JFrame {
                 }
             });
             jMenuReportes.add(jMenuTiempoPorResponsable);
+        }
+        if(roles.contains(EnumRoles.ADMINISTRACION)) {
+            jMenu5 = new JMenu();
+            jMenu5.setText("Administrar");
+            jMenu2.add(jMenu5);
+
+            JMenuItem jMenuAdministrarUsuario = new JMenuItem();
+            jMenuAdministrarUsuario.setText("Usuarios");
+            
+            jMenuAdministrarUsuario.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    JFrame administrarUsuarios = new VistaAdministradorUsuario();
+                    administrarUsuarios.setVisible(true);
+                }
+            });
+            jMenu5.add(jMenuAdministrarUsuario);
         }
 
         jMenuItem1 = new JMenuItem();

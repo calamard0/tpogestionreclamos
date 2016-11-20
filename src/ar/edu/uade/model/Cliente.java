@@ -6,10 +6,15 @@ import java.util.List;
 import java.util.Vector;
 
 import ar.edu.uade.dao.ClienteDAO;
+import ar.edu.uade.dao.UsuarioDAO;
 import ar.edu.uade.dto.ClienteDTO;
+import ar.edu.uade.exception.ClienteExistenteException;
+import ar.edu.uade.exception.ClienteNoEncontradoException;
+import ar.edu.uade.exception.UsuarioExistenteException;
+import ar.edu.uade.exception.UsuarioNoEncontradoException;
 
 
-public class Cliente {
+public class Cliente implements IPersistible {
     private int codigo_cliente;
     private String nombre;
     private int dni;
@@ -28,10 +33,18 @@ public class Cliente {
         this.mail = mail;
         reclamos = new ArrayList<>();
     }
-
+    
+    public Cliente(ClienteDTO dto) {
+        this.nombre = dto.getNombre();
+        this.dni = Integer.parseInt(dto.getDni());
+        this.domicilio = dto.getDomicilio();
+        this.telefono = dto.getTelefono();
+        this.mail = dto.getMail();
+    }
+    
     public Cliente() {
-		// TODO Auto-generated constructor stub
-	}
+    	
+    }
 
 	public int getCantReclamos() {
         return reclamos.size();
@@ -138,6 +151,30 @@ public class Cliente {
 			listaView.add(view);
 		}
 		return listaView;
+	}
+	
+
+	@Override
+	public void insert() throws ClienteExistenteException {
+		Cliente cl = ClienteDAO.getInstancia().buscarPorDni(this.getDni());
+		if (cl != null)
+			throw new ClienteExistenteException();
+		
+		ClienteDAO.getInstancia().insert(this);
+	}
+	
+	@Override
+	public void update() {
+		ClienteDAO.getInstancia().update(this);
+	}
+	
+	@Override
+	public void delete() throws ClienteNoEncontradoException {
+		Cliente cl = ClienteDAO.getInstancia().buscarPorDni(this.getDni());
+		if (cl != null)
+			ClienteDAO.getInstancia().delete(this);
+		else
+			throw new ClienteNoEncontradoException("No existe el cliente con el dni: " + this.getDni());
 	}
 
 }

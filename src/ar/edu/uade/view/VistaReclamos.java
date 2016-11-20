@@ -146,6 +146,7 @@ public class VistaReclamos extends JFrame implements NuevoReclamoObs{
     		instancia = new VistaReclamos(codigoUsuario);
     	}
     	else{
+    		instancia.dataReclamo = new Vector<>();
     		instancia.actualizarTabla(instancia.dataReclamo, instancia.data, GestionReclamos.getInstancia().getUltimoReclamo());
     	}
     	return instancia;
@@ -168,20 +169,31 @@ public class VistaReclamos extends JFrame implements NuevoReclamoObs{
         Collection<ReclamoDTO> reclamosParaUsuario = GestionReclamos.getInstancia().getReclamosParaUsuario(codigoUsuario);
   	  
         for (ReclamoDTO reclamoView : reclamosParaUsuario) {
-            dataReclamo.add(String.valueOf(reclamoView.getNumero()));
-            dataReclamo.add(String.valueOf(reclamoView.getTipoReclamo()));
-            String resp = "";
-            if(reclamoView.isEstaSolucionado()){
-            	resp = "Si";
+        	boolean agregado = false;
+        	for(int i=0;i<table.getModel().getRowCount();i++){
+        		System.out.println(table.getModel().getValueAt(i, 0));
+                if(table.getModel().getValueAt(i, 0).equals(String.valueOf(reclamoView.getNumero()))){
+                	agregado = true;
+                }
             }
-            else{
-            	resp="No";
-            }
-            	
-            dataReclamo.add(resp);
-            dataReclamo.add(String.valueOf(reclamoView.getDescripcion()));
-            data.add(dataReclamo);
-            dataReclamo = new Vector<>();
+        	
+        	if ( ! agregado ) {
+        		dataReclamo.add(String.valueOf(reclamoView.getNumero()));
+                dataReclamo.add(String.valueOf(reclamoView.getTipoReclamo()));
+                String resp = "";
+                if(reclamoView.isEstaSolucionado()){
+                	resp = "Si";
+                }
+                else{
+                	resp="No";
+                }
+                	
+                dataReclamo.add(resp);
+                dataReclamo.add(String.valueOf(reclamoView.getDescripcion()));
+                data.add(dataReclamo);
+                dataReclamo = new Vector<>();
+        	}
+            
         }
 	}
     
