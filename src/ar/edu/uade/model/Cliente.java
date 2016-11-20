@@ -40,6 +40,7 @@ public class Cliente implements IPersistible {
         this.domicilio = dto.getDomicilio();
         this.telefono = dto.getTelefono();
         this.mail = dto.getMail();
+        this.codigo_cliente = dto.getCodigo();
     }
     
     public Cliente() {

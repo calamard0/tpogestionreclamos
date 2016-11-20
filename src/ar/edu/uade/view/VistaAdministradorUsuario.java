@@ -69,6 +69,7 @@ public class VistaAdministradorUsuario extends javax.swing.JFrame {
 		btnEliminar = new JButton("Eliminar");
 		btnEliminar.setBounds(145, 50, 100, 20);
 		this.getContentPane().add(btnEliminar);
+		btnEliminar.setEnabled(false);
 		btnEliminar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent evt) {
 				try {

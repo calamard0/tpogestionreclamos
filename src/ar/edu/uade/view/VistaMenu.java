@@ -186,16 +186,28 @@ public class VistaMenu extends JFrame {
                 }
             });
             jMenu5.add(jMenuAdministrarUsuario);
+            
+            JMenuItem jMenuAdministrarCliente = new JMenuItem();
+            jMenuAdministrarCliente.setText("Clientes");
+            
+            jMenuAdministrarCliente.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    JFrame administradorClientes = new VistaAdministradorCliente();
+                    administradorClientes.setVisible(true);
+                }
+            });
+            jMenu5.add(jMenuAdministrarCliente);
         }
-
-        jMenuItem1 = new JMenuItem();
-        jMenu3.add(jMenuItem1);
-        jMenuItem1.setText("Ver Reclamos");
-        jMenuItem1.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                 VistaReclamos.getInstancia(codigoUsuario).setVisible(true);
-            }
-        });
+        if(roles.contains(EnumRoles.ADMINISTRACION) || roles.contains(EnumRoles.DISTRIBUCION) || roles.contains(EnumRoles.FACTURACION) || roles.contains(EnumRoles.ZONA_ENTREGA)) {
+        	jMenuItem1 = new JMenuItem();
+            jMenu3.add(jMenuItem1);
+            jMenuItem1.setText("Ver Reclamos");
+            jMenuItem1.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent evt) {
+                     VistaReclamos.getInstancia(codigoUsuario).setVisible(true);
+                }
+            });
+        }        
         jMenu1 = new JMenu();
         jMenuBar1.add(jMenu1);
         jMenu1.setText("Salir del Sistema");

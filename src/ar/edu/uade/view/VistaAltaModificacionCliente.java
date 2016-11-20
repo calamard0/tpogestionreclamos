@@ -24,14 +24,10 @@ public class VistaAltaModificacionCliente extends JFrame {
 	private JTextField fieldDomicilio;
 	private JTextField fieldTelefono;
 	private JTextField fieldMail;
+	private ClienteDTO clienteAModificar;
 	
 	private JButton btnGrabar;
 	private JButton btnModificar;
-	
-	public static void main(String[] args) {
-		VistaAltaModificacionCliente vista = new VistaAltaModificacionCliente();
-		vista.setVisible(true);
-	}
 	
 	public VistaAltaModificacionCliente() {
 		initGUI();
@@ -106,7 +102,7 @@ public class VistaAltaModificacionCliente extends JFrame {
 				try {
 					validarCamposObligatorios();
 					
-					ClienteDTO dto = new ClienteDTO(fieldDni.getText(), fieldNombre.getText(), fieldMail.getText(), fieldDomicilio.getText(), fieldTelefono.getText());
+					ClienteDTO dto = new ClienteDTO(fieldDni.getText(), fieldNombre.getText(), fieldMail.getText(), fieldDomicilio.getText(), fieldTelefono.getText(), -1);
 					GestionReclamos.getInstancia().altaCliente(dto);
 					JOptionPane.showMessageDialog(null, "Se ha agregado correctamente el cliente.");
 				} catch (CampoObligatorioException e) {
@@ -125,7 +121,7 @@ public class VistaAltaModificacionCliente extends JFrame {
 				try {
 					validarCamposObligatorios();
 					
-					ClienteDTO dto = new ClienteDTO(fieldDni.getText(), fieldNombre.getText(), fieldMail.getText(), fieldDomicilio.getText(), fieldTelefono.getText());
+					ClienteDTO dto = new ClienteDTO(fieldDni.getText(), fieldNombre.getText(), fieldMail.getText(), fieldDomicilio.getText(), fieldTelefono.getText(), clienteAModificar.getCodigo());
 					GestionReclamos.getInstancia().modificarCliente(dto);
 					JOptionPane.showMessageDialog(null, "Se han modificado correctamente los datos del cliente.");
 					
@@ -142,7 +138,8 @@ public class VistaAltaModificacionCliente extends JFrame {
 	private void cargarDatosCliente(int dni) {
 		try {
 			ClienteDTO dto = GestionReclamos.getInstancia().getCliente(dni);
-	        
+			clienteAModificar = dto;
+			
 			fieldNombre.setText(dto.getNombre());
 			fieldDni.setText(dto.getDni());
 			fieldDomicilio.setText(dto.getDomicilio());
