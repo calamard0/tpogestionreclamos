@@ -43,6 +43,7 @@ public class VistaAltaModificacionUsuario extends JFrame {
 	private JButton btnEliminar;
 	private JButton btnAceptar;
 	private JButton btnModificar;
+	private int codigoUsuarioModificando;
 	
 	private Vector<String> dataRoles = new Vector<>();
 	private Vector<Vector<String>> data =  new Vector<>();
@@ -200,7 +201,7 @@ public class VistaAltaModificacionUsuario extends JFrame {
 					validarCamposObligatorios(true);
 					ArrayList<EnumRoles> roles = obtenerRoles();
 					
-					UsuarioDTO dto = new UsuarioDTO(fieldNombre.getText(), fieldApellido.getText(), -1, fieldUsuario.getText(), roles, passFieldContrasenia.getText());
+					UsuarioDTO dto = new UsuarioDTO(fieldNombre.getText(), fieldApellido.getText(), codigoUsuarioModificando, fieldUsuario.getText(), roles, passFieldContrasenia.getText());
 					GestionReclamos.getInstancia().modificarUsuario(dto);
 					JOptionPane.showMessageDialog(null, "Se han modificado correctamente los datos del usuario.");
 					
@@ -242,6 +243,7 @@ public class VistaAltaModificacionUsuario extends JFrame {
             
             btnAceptar.setEnabled(false);
             btnModificar.setEnabled(true);
+            codigoUsuarioModificando = dto.getCodigo();
 			
 		} catch (UsuarioNoEncontradoException e) {
 			JOptionPane.showMessageDialog(null, e.getMessage());

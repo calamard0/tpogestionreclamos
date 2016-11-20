@@ -13,7 +13,7 @@ public class ConnectionFactory
     private ConnectionFactory(){
     	
     	try {
-			Class.forName("net.sourceforge.jtds.jdbc.Driver");
+    		Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
 		} catch (ClassNotFoundException e) {
 			JOptionPane.showMessageDialog(null, "Error de configuracion");
 			e.printStackTrace();
@@ -29,9 +29,9 @@ public class ConnectionFactory
     
     public Connection getConexion()
     {  
-        String userName = "AI_2974_20";
-        String password = "AI_2974_20";
-        String url = "jdbc:jtds:sqlserver://bd";
+        String userName = "AI_2974_09";
+        String password = "AI_2974_09";
+        String url = "jdbc:sqlserver://" + "BROKER-PC\\SQL2014";
         Connection con = null;
 		try {
 			con = DriverManager.getConnection (url, userName, password);

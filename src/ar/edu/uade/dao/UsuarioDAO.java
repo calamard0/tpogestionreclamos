@@ -31,6 +31,7 @@ public class UsuarioDAO extends BaseDAO
 	{
 		
 	}
+	
 	public static UsuarioDAO getInstancia()
 	{
 		if (instancia == null)
@@ -45,11 +46,11 @@ public class UsuarioDAO extends BaseDAO
 		try {
 			Usuario u = (Usuario) d;
 			con = ConnectionFactory.getInstancia().getConexion();
-			PreparedStatement s = con.prepareStatement("DELETE FROM Usuario WHERE usuario = ? AND clave = ?");
+			PreparedStatement s = con.prepareStatement("DELETE FROM Usuario WHERE usuario = ?");
 			s.setString(1, u.getUsuario());
 			s.execute();
 		} catch (Exception e) {
-			System.out.println();
+			e.printStackTrace();
 		} finally {
 			ConnectionFactory.getInstancia().closeCon();
 		}
@@ -63,19 +64,39 @@ public class UsuarioDAO extends BaseDAO
 			Usuario u = (Usuario) o;
 			con = ConnectionFactory.getInstancia().getConexion();
 			PreparedStatement s = con
-					.prepareStatement("INSERT INTO Usuario (nombre, apellido, usuario, clave) VALUES (?, ?, ?, ?)");
+					.prepareStatement("INSERT INTO Usuario (nombre, apellido, usuario, clave) VALUES (?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
 			s.setString(1, u.getNombre());
 			s.setString(2, u.getApellido());
 			s.setString(3, u.getUsuario());
 			s.setString(4, u.getClave());
-
-			s.execute();
+			s.executeUpdate();
+			
+			// Obtengo el ID generado para el usuario.
+			ResultSet rs = s.getGeneratedKeys();
+			 int newId = -1;
+			if (rs.next()) {
+			  newId = rs.getInt(1);
+			}
+			
+			// insertar roles
+			for (EnumRoles rol : u.getRoles()) {
+				int rolId = getRolId(rol);
+				s = con.prepareStatement("INSERT INTO UsuarioRol (IdRol, IdUsuario) values (?, ?)");
+				s.setInt(1, rolId);
+				s.setInt(2, newId);
+				s.execute();
+			}
+			
 		} catch (Exception e) {
 			System.out.println();
 		} finally {
 			ConnectionFactory.getInstancia().closeCon();
 		}
 
+	}
+
+	private int getRolId(EnumRoles rol) {
+		return rol.ordinal() + 1;
 	}
 
 	@Override
@@ -111,14 +132,29 @@ public class UsuarioDAO extends BaseDAO
 		try {
 			con = ConnectionFactory.getInstancia().getConexion();
 			Usuario u = (Usuario) o;
-			PreparedStatement s = con.prepareStatement("UPDATE Usuario " +
-					"set clave = ? WHERE usuario = ?");
+			PreparedStatement s = con.prepareStatement("UPDATE Usuario set nombre = ?, apellido = ? where usuario = ?");
 			
-			s.setString(1, u.getClave());
-			s.setString(2, u.getUsuario());
+			s.setString(1, u.getNombre());
+			s.setString(2, u.getApellido());
+			s.setString(3, u.getUsuario());
 			s.execute();
+			
+			Usuario usu = obtenerUsuarioPorUsuario(u.getUsuario());
+			s = con.prepareStatement("DELETE FROM UsuarioRol where IdUsuario = ?");
+			
+			s.setInt(1, usu.getCodigo());
+			s.execute();
+			
+			// insertar roles
+			for (EnumRoles rol : u.getRoles()) {
+				int rolId = getRolId(rol);
+				s = con.prepareStatement("INSERT INTO UsuarioRol (IdRol, IdUsuario) values (?, ?)");
+				s.setInt(1, rolId);
+				s.setInt(2, usu.getCodigo());
+				s.execute();
+			}
 		} catch (Exception e) {
-			System.out.println();
+			e.printStackTrace();
 		}finally {
 			ConnectionFactory.getInstancia().closeCon();
 		}

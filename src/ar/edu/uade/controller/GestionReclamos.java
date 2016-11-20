@@ -125,7 +125,7 @@ public class GestionReclamos {
 	public Collection<ReclamoDTO> getReclamosParaUsuario(int numUsuario){
 		Collection<String> tiposDeReclamos = new ArrayList<>();
 		Collection<EnumRoles> roles = GestionReclamos.getInstancia().rolesUsuario(numUsuario);
-		if(roles.contains(EnumRoles.ADMINISTRACION) || roles.contains(EnumRoles.CALL_CENTER) || roles.contains(EnumRoles.CONSULTA)){
+		if(roles.contains(EnumRoles.ADMINISTRACION)){
 			tiposDeReclamos.add(TipoReclamo.PRODUCTO.toString());
 			tiposDeReclamos.add(TipoReclamo.FALTANTES.toString());
 			tiposDeReclamos.add(TipoReclamo.CANTIDAD.toString());
