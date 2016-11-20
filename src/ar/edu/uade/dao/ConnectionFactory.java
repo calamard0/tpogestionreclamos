@@ -8,36 +8,45 @@ import javax.swing.JOptionPane;
 
 public class ConnectionFactory
 {
-    private static ConnectionFactory instancia;
-   
-    private ConnectionFactory(){
-    	
-    	try {
-			Class.forName("net.sourceforge.jtds.jdbc.Driver");
-		} catch (ClassNotFoundException e) {
-			JOptionPane.showMessageDialog(null, "Error de configuracion");
-			e.printStackTrace();
-		}
-    }
-    
-    public static ConnectionFactory getInstancia()
-    {
-    	if(instancia == null)
-    		instancia = new ConnectionFactory();
-        return instancia;
-    }
-    
-    public Connection getConexion()
-    {  
-        String userName = "AI_2974_20";
-        String password = "AI_2974_20";
-        String url = "jdbc:jtds:sqlserver://bd";
-        Connection con = null;
-		try {
-			con = DriverManager.getConnection (url, userName, password);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-        return con;
-    }
-}
+	 private static ConnectionFactory instancia;
+		private Connection con;
+	   
+	    private ConnectionFactory(){
+	    	
+	    	try {
+				Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+			} catch (ClassNotFoundException e) {
+				JOptionPane.showMessageDialog(null, "Error de configuracion");
+				e.printStackTrace();
+			}
+	    }
+	    
+	    public static ConnectionFactory getInstancia()
+	    {
+	    	if(instancia == null)
+	    		instancia = new ConnectionFactory();
+	        return instancia;
+	    }
+	    
+	    public Connection getConexion()
+	    {  
+	        String userName = "tpo";
+	        String password = "tpo";
+	        String url = "jdbc:sqlserver://localhost:1433;databaseName=api2";
+			try {
+				con = DriverManager.getConnection (url, userName, password);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+	        return con;
+	    }
+	    
+	    public void closeCon() {
+			if (con != null) {
+				try {
+					con.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}	
+		}}
