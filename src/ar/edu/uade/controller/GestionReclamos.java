@@ -63,7 +63,6 @@ public class GestionReclamos extends AlarmaNuevoReclamo{
 		return usuarios;
 	}
 
-
 	public Collection<String> getCodigoProductos() {
 		Collection<String> productos = new ArrayList<>();
 		for (Producto producto : Producto.obtenerTodos()) {
@@ -157,17 +156,6 @@ public class GestionReclamos extends AlarmaNuevoReclamo{
 			}
 		}
 		return reclamosDto;
-	}
-	
-	public void iniciarReclamo(String desc, int codigo_cliente, int operador, int cod_responsable, boolean es_compuesto){
-	if (!es_compuesto){
-		Reclamo reclamoNuevo = new Reclamo(reclamos.size()+1, desc);
-		reclamoNuevo.setOperador(buscarUsuario(operador));
-		reclamoNuevo.setCliente(buscarCliente(codigo_cliente));
-		reclamoNuevo.setResponsable(buscarUsuario(cod_responsable));
-		reclamoNuevo.guardarCambios();
-		this.notifyObservers(reclamoNuevo);
-		}
 	}
 
 	public void crearReclamoProducto(int dni,HashMap<Integer, Integer> mapCodigoCantidad, String descripcion, String responsable) throws UsuarioNoEncontradoException {
@@ -339,10 +327,7 @@ public class GestionReclamos extends AlarmaNuevoReclamo{
 			return user.getCodigo();
 		}
 	}
-	
-	 
-	
-	
+
 	/**
 	 * @return Devuelve los roles que tiene el usuario con el codigo pasado como parametro
 	 */
@@ -356,14 +341,6 @@ public class GestionReclamos extends AlarmaNuevoReclamo{
 
 	private Usuario buscarUsuario(int numUsuario) {
 		return Usuario.buscarPorId(numUsuario);
-	}
-
-	private Cliente buscarCliente(int numCliente) {
-		return null;
-	}
-
-	private Producto buscarProducto(int cod_producto) {
-		return null;
 	}
 
 	public Collection<ReclamoDTO> getReclamosSimples() {
@@ -383,8 +360,6 @@ public class GestionReclamos extends AlarmaNuevoReclamo{
 	public void setReclamos(Collection<Reclamo> reclamos) {
 		this.reclamos = reclamos;
 	}
-
-	
 
 	public void setUsuarios(Collection<Usuario> usuarios) {
 		this.usuarios = usuarios;
