@@ -14,7 +14,7 @@ import ar.edu.uade.exception.UsuarioExistenteException;
 import ar.edu.uade.exception.UsuarioNoEncontradoException;
 import ar.edu.uade.model.*;
 
-public class GestionReclamos {
+public class GestionReclamos extends AlarmaNuevoReclamo{
 
 	private Collection<Cliente> clientes;
 	private Collection<Reclamo> reclamos;
@@ -62,7 +62,6 @@ public class GestionReclamos {
 		}
 		return usuarios;
 	}
-
 
 	public Collection<String> getCodigoProductos() {
 		Collection<String> productos = new ArrayList<>();
@@ -158,16 +157,6 @@ public class GestionReclamos {
 		}
 		return reclamosDto;
 	}
-	
-	public void iniciarReclamo(String desc, int codigo_cliente, int operador, int cod_responsable, boolean es_compuesto){
-	if (!es_compuesto){
-		Reclamo reclamoNuevo = new Reclamo(reclamos.size()+1, desc);
-		reclamoNuevo.setOperador(buscarUsuario(operador));
-		reclamoNuevo.setCliente(buscarCliente(codigo_cliente));
-		reclamoNuevo.setResponsable(buscarUsuario(cod_responsable));
-		reclamoNuevo.guardarCambios();
-		}
-	}
 
 	public void crearReclamoProducto(int dni,HashMap<Integer, Integer> mapCodigoCantidad, String descripcion, String responsable) throws UsuarioNoEncontradoException {
 		Cliente c = Cliente.buscarPorDni(dni);
@@ -206,6 +195,7 @@ public class GestionReclamos {
 		this.setReclamos(listaReclamos);
 
 		r.guardarCambios();
+		this.notifyObservers(r);
 	}
 
 	public void crearReclamoCantidades(int dni, Map<Integer, Integer> mapCodigoCantidad, String descripcion, String responsable) throws UsuarioNoEncontradoException { 
@@ -224,7 +214,7 @@ public class GestionReclamos {
 		this.setReclamos(listaReclamos);
 		
 		reclamoCantidad.guardarCambios();
-		
+		this.notifyObservers(reclamoCantidad);
 
 	}
 
@@ -243,7 +233,7 @@ public class GestionReclamos {
 		this.setReclamos(listaReclamos);
 
 		reclamoPorZona.guardarCambios();
-		
+		this.notifyObservers(reclamoPorZona);
 	}
 
 	public void crearReclamoFactura(int dni, String descripcion, Map<Integer, Date> mapIdFecha, String responsable) throws UsuarioNoEncontradoException {
@@ -263,7 +253,7 @@ public class GestionReclamos {
 		this.setReclamos(listaReclamos);
 		
 		reclamoFacturacion.guardarCambios();
-		
+		this.notifyObservers(reclamoFacturacion);
 	}
 
 	public void crearReclamoFaltantes(int dni, int cod_producto, int cant_socilitada, int cant_recibidad, String descripcion, String responsable) throws UsuarioNoEncontradoException {
@@ -294,6 +284,7 @@ public class GestionReclamos {
 		this.setReclamos(listaReclamos);
 		
 		reclamoFaltantes.guardarCambios();
+		this.notifyObservers(reclamoFaltantes);
 	}
 
 	public void crearReclamoCompuesto(int dni, List<Integer> ids_reclamos, String responsable) throws UsuarioNoEncontradoException {
@@ -308,6 +299,8 @@ public class GestionReclamos {
 		reclamoCompuesto.setReclamos(listaReclamos);
 		
 		reclamoCompuesto.guardarCambios();
+		this.notifyObservers(reclamoCompuesto);
+		
 	}
 
 	public void actualizarReclamo(Date fecha, String estado, int codigo_reclamo, String detalle, Integer codigoUsuario) {
@@ -334,10 +327,7 @@ public class GestionReclamos {
 			return user.getCodigo();
 		}
 	}
-	
-	 
-	
-	
+
 	/**
 	 * @return Devuelve los roles que tiene el usuario con el codigo pasado como parametro
 	 */
@@ -351,14 +341,6 @@ public class GestionReclamos {
 
 	private Usuario buscarUsuario(int numUsuario) {
 		return Usuario.buscarPorId(numUsuario);
-	}
-
-	private Cliente buscarCliente(int numCliente) {
-		return null;
-	}
-
-	private Producto buscarProducto(int cod_producto) {
-		return null;
 	}
 
 	public Collection<ReclamoDTO> getReclamosSimples() {
@@ -378,8 +360,6 @@ public class GestionReclamos {
 	public void setReclamos(Collection<Reclamo> reclamos) {
 		this.reclamos = reclamos;
 	}
-
-	
 
 	public void setUsuarios(Collection<Usuario> usuarios) {
 		this.usuarios = usuarios;
@@ -462,7 +442,7 @@ public class GestionReclamos {
 		Cliente cl = Cliente.buscarPorDni(dni);
 		if (cl == null)
 			throw new ClienteNoEncontradoException("No existe el cliente con el dni: " + dni);
-		ClienteDTO dto = new ClienteDTO(String.valueOf(cl.getDni()), cl.getNombre(), cl.getMail(), cl.getDomicilio(), cl.getTelefono());
+		ClienteDTO dto = new ClienteDTO(String.valueOf(cl.getDni()), cl.getNombre(), cl.getMail(), cl.getDomicilio(), cl.getTelefono(), cl.getCodigo_cliente());
 		return dto;
 	}
 }

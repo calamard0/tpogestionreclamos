@@ -51,7 +51,7 @@ public class ClienteDAO extends BaseDAO
 			con = ConnectionFactory.getInstancia().getConexion();
 			Cliente c = (Cliente) o;
 			PreparedStatement s = con.prepareStatement(
-					"INSERT INTO Cliente (nombre, dni, domicilio, email, telefono) VALUES (?, ?, ?, ?, ?)");
+					"INSERT INTO Cliente (nombre, dni, domicilio, mail, telefono) VALUES (?, ?, ?, ?, ?)");
 			s.setString(1, c.getNombre());
 			s.setInt(2, c.getDni());
 			s.setString(3, c.getDomicilio());
@@ -63,7 +63,6 @@ public class ClienteDAO extends BaseDAO
 		} finally {
 			ConnectionFactory.getInstancia().closeCon();
 		}
-
 	}
 
 	@Override
@@ -99,18 +98,19 @@ public class ClienteDAO extends BaseDAO
 		try {
 			Cliente c = (Cliente) o;
 			con = ConnectionFactory.getInstancia().getConexion();
-			PreparedStatement s = con.prepareStatement("UPDATE Cliente " + "set nombre = ?," + "set domicilio = ?,"
-					+ "set telefono = ?," + "set email = ? WHERE dni = ?");
+			PreparedStatement s = con.prepareStatement("UPDATE Cliente " + "set nombre = ?," + "domicilio = ?,"
+					+ "telefono = ?," + "mail = ?, dni = ? WHERE codigo_cliente = ?");
 
 			s.setString(1, c.getNombre());
 			s.setString(2, c.getDomicilio());
 			s.setString(3, c.getTelefono());
 			s.setString(4, c.getMail());
 			s.setLong(5, c.getDni());
+			s.setLong(6, c.getCodigo_cliente());
 			s.execute();
 
 		} catch (Exception e) {
-			System.out.println();
+			e.printStackTrace();
 		} finally {
 			ConnectionFactory.getInstancia().closeCon();
 		}

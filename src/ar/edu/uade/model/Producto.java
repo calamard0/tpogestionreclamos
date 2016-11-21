@@ -9,8 +9,6 @@ public class Producto {
 	private String titulo;
 	private String descripcion;
 	private float precio;
-	private Usuario creador;
-	
 	
 	public Producto(int codigo, String titulo, String descripcion, float precio) {
 		super();
@@ -19,9 +17,6 @@ public class Producto {
 		this.descripcion = descripcion;
 		this.precio = precio;
 	}
-
-	
-	
 
 	public Producto() {
 		super();
@@ -68,16 +63,6 @@ public class Producto {
 
 	public void setPrecio(float precio) {
 		this.precio = precio;
-	}
-
-
-	public Usuario getCreador() {
-		return creador;
-	}
-
-
-	public void setCreador(Usuario creador) {
-		this.creador = creador;
 	}
 	
 	public static Producto buscarPorId(int codigoProducto) {

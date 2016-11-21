@@ -21,7 +21,6 @@ public class VistaLogin {
 			public void run() {
 				VistaLogin window = new VistaLogin();
 				window.frmLogin.setVisible(true);
-				
 			}
 		});
 	}

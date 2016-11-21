@@ -33,11 +33,9 @@ public class VistaReclamos extends JFrame implements NuevoReclamoObs{
     private JScrollPane jScrollPane;
     private JButton btnVerEventos;
     private JLabel lbAlerta;
+    private DefaultTableModel model;
     private Vector<String> dataReclamo = new Vector<>();
     private Vector<Vector<String>> data = new Vector<>();
-   
-    
-    
     
     private VistaReclamos(Integer codigoUsuario) {
     	
@@ -86,7 +84,7 @@ public class VistaReclamos extends JFrame implements NuevoReclamoObs{
             dataReclamo = new Vector<>();
         }
 
-		TableModel model = new DefaultTableModel(data, nombresColumnas);
+		model = new DefaultTableModel(data, nombresColumnas);
 
         table = new JTable(model);
         table.setBounds(0, 20, 389, 185);
@@ -149,51 +147,37 @@ public class VistaReclamos extends JFrame implements NuevoReclamoObs{
     		instancia.dataReclamo = new Vector<>();
     		instancia.actualizarTabla(instancia.dataReclamo, instancia.data, GestionReclamos.getInstancia().getUltimoReclamo());
     	}
+    	GestionReclamos.getInstancia().attach(instancia);
     	return instancia;
     }
     
 	@Override
 	public void update(Reclamo r) {
-		System.out.println("A refrescar la pantalla!!!!");
-		
 		actualizarTabla(dataReclamo, data, r);
         this.repaint();
         this.revalidate();
-     //   this.setVisible(false);
-      // this.setVisible(true);
-
 	}	
 
 	public void actualizarTabla(Vector<String> dataReclamo, Vector<Vector<String>> data, Reclamo r){
 		lbAlerta.setText("Ultimo Reclamo creado :" + r.getDescripcion());
+		model.setRowCount(0);
         Collection<ReclamoDTO> reclamosParaUsuario = GestionReclamos.getInstancia().getReclamosParaUsuario(codigoUsuario);
-  	  
         for (ReclamoDTO reclamoView : reclamosParaUsuario) {
-        	boolean agregado = false;
-        	for(int i=0;i<table.getModel().getRowCount();i++){
-        		System.out.println(table.getModel().getValueAt(i, 0));
-                if(table.getModel().getValueAt(i, 0).equals(String.valueOf(reclamoView.getNumero()))){
-                	agregado = true;
-                }
+    		dataReclamo.add(String.valueOf(reclamoView.getNumero()));
+            dataReclamo.add(String.valueOf(reclamoView.getTipoReclamo()));
+            String resp = "";
+            if(reclamoView.isEstaSolucionado()){
+            	resp = "Si";
             }
-        	
-        	if ( ! agregado ) {
-        		dataReclamo.add(String.valueOf(reclamoView.getNumero()));
-                dataReclamo.add(String.valueOf(reclamoView.getTipoReclamo()));
-                String resp = "";
-                if(reclamoView.isEstaSolucionado()){
-                	resp = "Si";
-                }
-                else{
-                	resp="No";
-                }
-                	
-                dataReclamo.add(resp);
-                dataReclamo.add(String.valueOf(reclamoView.getDescripcion()));
-                data.add(dataReclamo);
-                dataReclamo = new Vector<>();
-        	}
-            
+            else{
+            	resp="No";
+            }
+            	
+            dataReclamo.add(resp);
+            dataReclamo.add(String.valueOf(reclamoView.getDescripcion()));
+            //data.add(dataReclamo);
+            model.addRow(dataReclamo);
+            dataReclamo = new Vector<>();
         }
 	}
     

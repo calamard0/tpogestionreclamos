@@ -13,6 +13,7 @@ public class ClienteDTO {
     private String mail;
     private String domicilio;
     private String telefono;
+    private int codigo;
 
     public ClienteDTO(String dni, String nombre, String cantidad_reclamos, String mail) {
         this.dni = dni;
@@ -25,12 +26,13 @@ public class ClienteDTO {
     	this.dni = dni;
     }
     
-    public ClienteDTO(String dni, String nombre, String mail, String domicilio, String telefono) {
+    public ClienteDTO(String dni, String nombre, String mail, String domicilio, String telefono, int codigo) {
         this.dni = dni;
         this.nombre = nombre;
         this.mail = mail;
         this.setDomicilio(domicilio);
         this.setTelefono(telefono);
+        this.setCodigo(codigo);
     }
 
      public String getDni() {
@@ -88,6 +90,14 @@ public class ClienteDTO {
 
 	public void setTelefono(String telefono) {
 		this.telefono = telefono;
+	}
+
+	public int getCodigo() {
+		return codigo;
+	}
+
+	public void setCodigo(int codigo) {
+		this.codigo = codigo;
 	}
 
 }

@@ -22,7 +22,6 @@ public class Cliente implements IPersistible {
     private String telefono;
     private String mail;
     private Collection<Reclamo> reclamos;
-    private Usuario usuarioCreador;
 
     public Cliente(int codigo, String nombre, int dni, String dmicilio, String telefono, String mail) {
         codigo_cliente = codigo;
@@ -40,6 +39,7 @@ public class Cliente implements IPersistible {
         this.domicilio = dto.getDomicilio();
         this.telefono = dto.getTelefono();
         this.mail = dto.getMail();
+        this.codigo_cliente = dto.getCodigo();
     }
     
     public Cliente() {
@@ -48,14 +48,6 @@ public class Cliente implements IPersistible {
 
 	public int getCantReclamos() {
         return reclamos.size();
-    }
-
-    private void agregarReclamo(Reclamo reclamo) {
-        reclamos.add(reclamo);
-    }
-
-    private void removerReclamo(Reclamo reclamo) {
-        reclamos.remove(reclamo);
     }
 
     public int getCodigo_cliente() {
@@ -112,14 +104,6 @@ public class Cliente implements IPersistible {
 
     public void setReclamos(Collection<Reclamo> reclamos) {
         this.reclamos = reclamos;
-    }
-
-    public Usuario getUsuarioCreador() {
-        return usuarioCreador;
-    }
-
-    public void setUsuarioCreador(Usuario usuarioCreador) {
-        this.usuarioCreador = usuarioCreador;
     }
     
     public static Cliente buscarPorCodigo(int codigoCliente) {
