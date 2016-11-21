@@ -15,6 +15,8 @@ import ar.edu.uade.dto.ClienteDTO;
 import ar.edu.uade.dto.ProductoDTO;
 import ar.edu.uade.exception.CampoObligatorioException;
 import ar.edu.uade.exception.ClienteExistenteException;
+import ar.edu.uade.exception.ProductoExistenteException;
+import ar.edu.uade.exception.ProductoNoExistenteException;
 
 
 public class VistaAltaModificacionProducto extends JFrame {
@@ -46,54 +48,49 @@ public class VistaAltaModificacionProducto extends JFrame {
 		//frmLogin = new JFrame();
 		this.setResizable(false);
 		this.getContentPane().setFont(new Font("Tahoma", Font.PLAIN, 14));
-		this.setTitle("Alta Cliente");
+		this.setTitle("Alta Producto");
 		this.setBounds(200, 200, 260, 300);
 		this.getContentPane().setLayout(null);
 		
-		JLabel nombreLbl = new JLabel("Nombre:");
-		nombreLbl.setBounds(20, 10, 70, 17);
-		nombreLbl.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		this.getContentPane().add(nombreLbl);
+		JLabel codigoLbl = new JLabel("CODIGO:");
+		codigoLbl.setBounds(20, 10, 70, 17);
+		codigoLbl.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		this.getContentPane().add(codigoLbl);
 		
 		fieldCodigo = new JTextField();
 		fieldCodigo.setBounds(100, 10, 139, 20);
 		this.getContentPane().add(fieldCodigo);
 		fieldCodigo.setColumns(10);
 		
-		JLabel dniLbl = new JLabel("DNI:");
-		dniLbl.setBounds(20, 50, 50, 17);
-		dniLbl.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		this.getContentPane().add(dniLbl);
+		JLabel tituloLbl = new JLabel("TITULO:");
+		tituloLbl.setBounds(20, 50, 50, 17);
+		tituloLbl.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		this.getContentPane().add(tituloLbl);
 		
 		fieldTitulo = new JTextField();
 		fieldTitulo.setBounds(100, 50, 139, 20);
 		this.getContentPane().add(fieldTitulo);
 		fieldTitulo.setColumns(10);
 		
-		JLabel domicilioLbl = new JLabel("Domicilio:");
-		domicilioLbl.setBounds(20, 90, 70, 17);
-		domicilioLbl.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		this.getContentPane().add(domicilioLbl);
+		JLabel descripcionLbl = new JLabel("DESCRIPCION:");
+		descripcionLbl.setBounds(20, 90, 70, 17);
+		descripcionLbl.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		this.getContentPane().add(descripcionLbl);
 		
 		fieldDescripcion = new JTextField();
 		fieldDescripcion.setBounds(100, 90, 139, 20);
 		this.getContentPane().add(fieldDescripcion);
 		fieldDescripcion.setColumns(10);
 		
-		JLabel telefonoLbl = new JLabel("Telefono:");
-		telefonoLbl.setBounds(20, 130, 70, 17);
-		telefonoLbl.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		this.getContentPane().add(telefonoLbl);
+		JLabel precioLbl = new JLabel("Precio:");
+		precioLbl.setBounds(20, 130, 70, 17);
+		precioLbl.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		this.getContentPane().add(precioLbl);
 		
 		fieldPrecio = new JTextField();
 		fieldPrecio.setBounds(100, 130, 139, 20);
 		this.getContentPane().add(fieldPrecio);
 		fieldPrecio.setColumns(10);
-		
-		JLabel mailLbl = new JLabel("Mail:");
-		mailLbl.setBounds(20, 170, 50, 17);
-		mailLbl.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		this.getContentPane().add(mailLbl);
 		
 		
 		btnGrabar = new JButton("Grabar");
@@ -101,13 +98,12 @@ public class VistaAltaModificacionProducto extends JFrame {
 			public void actionPerformed(ActionEvent evt) {
 				try {
 					validarCamposObligatorios();
-					
-					ClienteDTO dto = new ClienteDTO(fieldTitulo.getText(), fieldCodigo.getText(), fieldDescripcion.getText(), fieldPrecio.getText());
-					GestionReclamos.getInstancia().altaCliente(dto);
-					JOptionPane.showMessageDialog(null, "Se ha agregado correctamente el cliente.");
+					ProductoDTO dto = new ProductoDTO(Integer.parseInt(fieldCodigo.getText()), fieldTitulo.getText(),fieldDescripcion.getText(), Float.parseFloat(fieldPrecio.getText()));
+					GestionReclamos.getInstancia().altaProducto(dto);
+					JOptionPane.showMessageDialog(null, "Se ha agregado correctamente el producto.");
 				} catch (CampoObligatorioException e) {
 					JOptionPane.showMessageDialog(null, e.getMessage());
-				} catch (ClienteExistenteException e) {
+				} catch (ProductoExistenteException  e) {
 					JOptionPane.showMessageDialog(null, e.getMessage());
 				}
 			}
@@ -120,11 +116,14 @@ public class VistaAltaModificacionProducto extends JFrame {
 			public void actionPerformed(ActionEvent evt) {
 				try {
 					validarCamposObligatorios();
-					ProductoDTO dto = new ProductoDTO(Integer.parseInt(fieldCodigo.getText(), fieldTitulo.getText(),fieldDescripcion.getText(), Float.parseFloat(fieldPrecio.getText());
-					GestionReclamos.getInstancia().modificarCliente(dto);
-					JOptionPane.showMessageDialog(null, "Se han modificado correctamente los datos del cliente.");
+					ProductoDTO dto = new ProductoDTO(Integer.parseInt(fieldCodigo.getText()), fieldTitulo.getText(),fieldDescripcion.getText(), Float.parseFloat(fieldPrecio.getText()));
+					
+					GestionReclamos.getInstancia().modificarProducto(dto);
+					JOptionPane.showMessageDialog(null, "Se han modificado correctamente los datos del producto.");
 					
 				} catch (CampoObligatorioException e) {
+					JOptionPane.showMessageDialog(null, e.getMessage());
+				} catch (ProductoNoExistenteException e) {
 					JOptionPane.showMessageDialog(null, e.getMessage());
 				}
 			}
@@ -134,15 +133,14 @@ public class VistaAltaModificacionProducto extends JFrame {
 		btnModificar.setEnabled(false);
 	}
 	
-	private void cargarDatosProducto(int dni) {
+	private void cargarDatosProducto(int codigo) {
 		try {
-			ClienteDTO dto = GestionReclamos.getInstancia().getCliente(dni);
+			ProductoDTO dto = GestionReclamos.getInstancia().getProducto(codigo);
 	        
-			fieldCodigo.setText(dto.getNombre());
-			fieldTitulo.setText(dto.getDni());
-			fieldDescripcion.setText(dto.getDomicilio());
-			fieldPrecio.setText(dto.getTelefono());
-			fieldMail.setText(dto.getMail());
+			fieldCodigo.setText(Integer.valueOf(dto.getCodigo()).toString());
+			fieldTitulo.setText(dto.getTitulo());
+			fieldDescripcion.setText(dto.getDescripcion());
+			fieldPrecio.setText(Float.valueOf(dto.getPrecio()).toString());
             
             btnGrabar.setEnabled(false);
             btnModificar.setEnabled(true);

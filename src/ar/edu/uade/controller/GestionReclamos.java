@@ -10,6 +10,8 @@ import ar.edu.uade.enums.EnumRoles;
 import ar.edu.uade.enums.TipoReclamo;
 import ar.edu.uade.exception.ClienteExistenteException;
 import ar.edu.uade.exception.ClienteNoEncontradoException;
+import ar.edu.uade.exception.ProductoExistenteException;
+import ar.edu.uade.exception.ProductoNoExistenteException;
 import ar.edu.uade.exception.UsuarioExistenteException;
 import ar.edu.uade.exception.UsuarioNoEncontradoException;
 import ar.edu.uade.model.*;
@@ -412,6 +414,21 @@ public class GestionReclamos extends AlarmaNuevoReclamo{
 		usu.delete();
 	}
 	
+	
+	public void altaProducto(ProductoDTO dto) throws  ProductoExistenteException {
+		Producto prod = new Producto(dto);
+		prod.insert();
+	}
+	
+	public void modificarProducto(ProductoDTO dto) throws ProductoNoExistenteException {
+		Producto prod = new Producto(dto);
+		prod.update();
+	}
+	
+	public void eliminarProducto(ProductoDTO dto) throws ProductoNoExistenteException {
+		Producto prod = new Producto(dto);
+		prod.delete();
+	}
 	public void altaCliente(ClienteDTO dto) throws ClienteExistenteException  {
 		Cliente cl = new Cliente(dto);
 		cl.insert();
@@ -444,5 +461,20 @@ public class GestionReclamos extends AlarmaNuevoReclamo{
 			throw new ClienteNoEncontradoException("No existe el cliente con el dni: " + dni);
 		ClienteDTO dto = new ClienteDTO(String.valueOf(cl.getDni()), cl.getNombre(), cl.getMail(), cl.getDomicilio(), cl.getTelefono(), cl.getCodigo_cliente());
 		return dto;
+	}
+
+	public ProductoDTO getProducto(int codigo) throws ProductoNoExistenteException{
+		Producto prod = Producto.buscarPorId(codigo);
+		if (prod == null)
+			throw new ProductoNoExistenteException();
+			
+		ProductoDTO dto = new ProductoDTO(prod.getCodigo(), prod.getTitulo(), prod.getDescripcion(), prod.getPrecio());
+		return dto;
+	}
+
+	public void verificarProducto(int codigo) throws ProductoNoExistenteException {
+		Producto prod = Producto.buscarPorId(codigo);
+		if(prod==null)
+			throw new ProductoNoExistenteException();
 	}
 }

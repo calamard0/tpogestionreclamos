@@ -4,7 +4,6 @@ import java.util.Vector;
 
 import ar.edu.uade.dao.ProductoDAO;
 import ar.edu.uade.model.Producto;
-import ar.edu.uade.model.Usuario;
 
 public class ProductoDTO {
 
@@ -12,7 +11,6 @@ public class ProductoDTO {
 	private String titulo;
 	private String descripcion;
 	private float precio;
-	private Usuario creador;
 	
 	
 	public ProductoDTO(int codigo, String titulo, String descripcion, float precio) {
@@ -23,9 +21,10 @@ public class ProductoDTO {
 		this.precio = precio;
 	}
 
-	
-	
-
+	public ProductoDTO(int codigo) {
+		super();
+		this.codigo = codigo;
+	}
 	public ProductoDTO() {
 		super();
 	}
@@ -72,15 +71,6 @@ public class ProductoDTO {
 		this.precio = precio;
 	}
 
-
-	public Usuario getCreador() {
-		return creador;
-	}
-
-
-	public void setCreador(Usuario creador) {
-		this.creador = creador;
-	}
 	
 	public static Producto buscarPorId(int codigoProducto) {
 		return ProductoDAO.getInstancia().buscarProducto(codigoProducto);

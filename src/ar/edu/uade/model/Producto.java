@@ -3,6 +3,9 @@ package ar.edu.uade.model;
 import java.util.Vector;
 
 import ar.edu.uade.dao.ProductoDAO;
+import ar.edu.uade.dto.ProductoDTO;
+import ar.edu.uade.exception.ProductoExistenteException;
+import ar.edu.uade.exception.ProductoNoExistenteException;
 
 public class Producto {
 	private int codigo;
@@ -17,10 +20,16 @@ public class Producto {
 		this.descripcion = descripcion;
 		this.precio = precio;
 	}
+	
+	public Producto(ProductoDTO dto) {
+		this.codigo = dto.getCodigo();
+		this.titulo = dto.getTitulo();
+		this.descripcion = dto.getDescripcion();
+		this.precio = dto.getPrecio();
+	}
 
 	public Producto() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 
@@ -76,5 +85,30 @@ public class Producto {
 	
 	public static Producto buscarProducto(int idProducto){
 		return ProductoDAO.getInstancia().buscarProducto(idProducto);
+	}
+
+	public void insert() throws ProductoExistenteException {
+		Producto prod = ProductoDAO.getInstancia().buscarProducto(this.codigo);
+		if(prod != null)
+			throw new ProductoExistenteException();
+		
+		ProductoDAO.getInstancia().insert(this);
+	}
+
+	public void update() throws ProductoNoExistenteException {
+		Producto prod = ProductoDAO.getInstancia().buscarProducto(this.codigo);
+		if(prod == null)
+			throw new ProductoNoExistenteException();
+		
+		ProductoDAO.getInstancia().update(this);
+	}
+
+	public void delete() throws ProductoNoExistenteException {
+		Producto prod = ProductoDAO.getInstancia().buscarProducto(this.codigo);
+		if(prod != null)
+			throw new ProductoNoExistenteException();
+		
+		ProductoDAO.getInstancia().delete(this);
+		
 	}
 }

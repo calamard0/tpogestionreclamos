@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Vector;
 
 import ar.edu.uade.enums.EnumRoles;
+import ar.edu.uade.model.Cliente;
 import ar.edu.uade.model.Producto;
 
 public class ProductoDAO extends BaseDAO 
@@ -49,15 +50,16 @@ public class ProductoDAO extends BaseDAO
 		try {
 			Producto p = (Producto) o;
 		    con = ConnectionFactory.getInstancia().getConexion();
-			PreparedStatement s = con.prepareStatement("INSERT INTO Producto (codigo, titulo, descripcion, precio) VALUES (?, ?, ?, ?)");
-			s.setInt(1, p.getCodigo());
-			s.setString(2, p.getTitulo());
-			s.setString(3, p.getDescripcion());
-			s.setFloat(4, p.getPrecio());
+			PreparedStatement s = con.prepareStatement("INSERT INTO Producto (titulo, descripcion, precio, creador) VALUES ( ?, ?, ?, ?)");
+			s.setString(1, p.getTitulo());
+			s.setString(2, p.getDescripcion());
+			s.setFloat(3, p.getPrecio());
+			s.setFloat(4, 4);
 			s.execute();
 		} catch (Exception e) {
-			System.out.println();
+			System.out.println(e);
 		}finally {
+
 			ConnectionFactory.getInstancia().closeCon();
 		}
 		
@@ -90,8 +92,25 @@ public class ProductoDAO extends BaseDAO
 
 	@Override
 	public void update(Object o) {
-		// TODO Auto-generated method stub
 
+		Connection con = null;
+		try {
+			Producto p = (Producto) o;
+			con = ConnectionFactory.getInstancia().getConexion();
+			PreparedStatement s = con.prepareStatement("UPDATE Producto "  + "set titulo= ?,"
+					+ "descripcion = ?," + "precio = ? WHERE codigo = ?");
+
+			s.setString(1, p.getTitulo());
+			s.setString(2, p.getDescripcion());
+			s.setFloat(3, p.getPrecio());
+			s.setLong(4, p.getCodigo());
+			s.execute();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			ConnectionFactory.getInstancia().closeCon();
+		}
 	}
 	public Vector<Producto> selectAll()
 	{
